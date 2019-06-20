@@ -1,0 +1,67 @@
+function main() {
+  doBase();
+  doUpdates();
+  doDLC();
+}
+
+/**
+ * Write links to spreadsheet 
+ */
+
+function createSpreadsheet(spreadsheet,pending) {
+  var file;
+  var element;
+  while (pending.getLastRow() > 0) {
+    var element = pending.getSheetValues(1, 1, 1, 1);
+    file = DriveApp.getFileById(element[0][0]);
+    var filename = file.getName();
+    var url = file.getUrl();
+    
+    console.log('Creating link on ' + filename);
+    spreadsheet.appendRow([filename, '=hyperlink("' + url + '";"' + url + '")']);
+    console.log('Created link on ' + filename);
+    pending.deleteRow(1);
+  }
+  spreadsheet.sort(1, true);
+}
+
+
+function doBase() {
+  var stash_sheet_id = 'PUBLIC_SHEET';
+  var base_stash_sheet    = SpreadsheetApp.openById(stash_sheet_id).getSheets()[0];
+  var pendingPermissionSpread = 'BUFFER_SHEET';
+  var spread = SpreadsheetApp.openById(pendingPermissionSpread);
+  var pending = spread.getSheets()[3];
+
+  createSpreadsheet(base_stash_sheet,pending);
+  console.log('Base finished');
+
+  
+}
+
+function doUpdates() {
+  var stash_sheet_id = 'PUBLIC_SHEET';
+  var updates_stash_sheet    =  SpreadsheetApp.openById(stash_sheet_id).getSheets()[1];
+  var pendingPermissionSpread = 'BUFFER_SHEET';
+  var spread = SpreadsheetApp.openById(pendingPermissionSpread);
+  var pending = spread.getSheets()[4];
+
+  createSpreadsheet(base_stash_sheet,pending);
+  console.log('Updates finished');
+ 
+}
+
+function doDLC() {
+  var stash_sheet_id = 'PUBLIC_SHEET';
+  var dlc_stash_sheet    =  SpreadsheetApp.openById(stash_sheet_id).getSheets()[2];
+  var pendingPermissionSpread = 'BUFFER_SHEET';
+  var spread = SpreadsheetApp.openById(pendingPermissionSpread);
+  var pending = spread.getSheets()[5];
+
+  createSpreadsheet(base_stash_sheet,pending);
+  console.log('DLC finished');
+  
+}
+  
+
+ 
