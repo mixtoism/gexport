@@ -28,7 +28,7 @@ function copy(src,dst,sheet) {
     if (! (dstfldr.getFilesByName(name)).hasNext() ) {  
       var newfile = f.makeCopy(dstfldr);
       sheet.appendRow([newfile.getId(),name]);
-      console.log('Copied ' + name());
+      console.log('Copied ' + name);
       
     }
     cont += 1;
