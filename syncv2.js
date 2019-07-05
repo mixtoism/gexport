@@ -1,10 +1,3 @@
-function main() {
-  base();
-  updates();
-  dlc();
-}
-
-
 function copy(src,dst,sheet) {
   var scriptProperties = PropertiesService.getScriptProperties();
   var continuationToken = scriptProperties.getProperty('copyTOKEN' + src);
@@ -18,13 +11,13 @@ function copy(src,dst,sheet) {
   }
   var cont = 1;
   var dstfldr = DriveApp.getFolderById(dst);
-  var dstfiles = dstfldr.getFiles();
-  
-  var copiedFiles = [];
+  range = sheet.getRange(1,1,sheet.getLastRow(), 1);
+  var arr = range.getValues();
+  var values = arr.join().split(',');
   while (files.hasNext()) {
     f=files.next();
     var name =f.getName();
-    if (sheet.createTextFinder(name).findNext() == null) {
+    if (!(values.indexOf(name) + 1) ) {
       var newfile = f.makeCopy(dstfldr);
       newfile.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
       var filename = name;//newfile.getName();
@@ -34,7 +27,7 @@ function copy(src,dst,sheet) {
       
     }
     cont += 1;
-    if (cont%30) { 
+    if (cont%100) { 
       scriptProperties.setProperty('copyTOKEN' + src, files.getContinuationToken());
     }
   }
@@ -46,9 +39,9 @@ function copy(src,dst,sheet) {
 
 
 function base() {
-  var stash_base              = 'DST_FLDR';
-  var hbg_base                = 'SRC_FLDR';
-  var pendingPermissionSpread = 'SPREADSHEET_DEST';
+  var stash_base              = '';
+  var hbg_base                = '';
+  var pendingPermissionSpread = '';
   var spreadsheet = SpreadsheetApp.openById(pendingPermissionSpread);
   var sheet = spreadsheet.getSheets()[0];
   copy(hbg_base,stash_base,sheet);
@@ -58,9 +51,9 @@ function base() {
 }
 
 function updates() {
-  var stash_updates = 'DST_FLDR';  
-  var hbg_updates   = 'SRC_FLDR';
-  var pendingPermissionSpread = 'SPREADSHEET_DEST';
+  var stash_updates = '';  
+  var hbg_updates   = '';
+  var pendingPermissionSpread = '';
   var spreadsheet = SpreadsheetApp.openById(pendingPermissionSpread);
   var sheet = spreadsheet.getSheets()[1];
   copy(hbg_updates,stash_updates,sheet);
@@ -71,9 +64,9 @@ function updates() {
 }
 
 function dlc() {
-  var stash_dlc = 'DST_FLDR';
-  var hbg_dlc   = 'SRC_FLDR';
-  var pendingPermissionSpread = 'SPREADSHEET_DEST';
+  var stash_dlc = '';
+  var hbg_dlc   = '';
+  var pendingPermissionSpread = '';
   var spreadsheet = SpreadsheetApp.openById(pendingPermissionSpread);
   var sheet = spreadsheet.getSheets()[2];
   copy(hbg_dlc,stash_dlc,sheet);
@@ -81,6 +74,3 @@ function dlc() {
   return;
 
 }
-
-
-
